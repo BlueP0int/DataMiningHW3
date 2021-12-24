@@ -1,0 +1,8 @@
+
+Hopkins Statistic is: 0.9809523709191128
+### Table Clustering Evaluation
+| ModelName | Silhouette_Coefficient | CalinskiHarabasz_index |
+| DBSCAN | -0.192 |35.965 |
+| Agglomerative | 0.295 |2237.282 |
+| MeanShift | 0.390 |311.680 |
+| kmeans | 0.278 |2587.885 |
