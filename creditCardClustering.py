@@ -14,13 +14,15 @@ from sklearn.cluster import AgglomerativeClustering
 from sklearn.cluster import MeanShift, estimate_bandwidth
 from sklearn.feature_selection import SelectKBest
 from kmeans import Kmeans
+from AGNES import AGNES
+from MyDBSCAN import MyDBSCAN
+import PreProcess
 from sklearn.feature_selection import chi2
 
 from sklearn import metrics
 from sklearn.neighbors import NearestNeighbors
 from random import sample
 from numpy.random import uniform
-import numpy as np
 from math import isnan
 
 # standedColorList = ['aliceblue', 'antiquewhite', 'aqua', 'aquamarine', 'azure', 'beige', 'bisque', 'black', 'blanchedalmond', 'blue', 'blueviolet', 'brown', 'burlywood', 'cadetblue', 'chartreuse', 'chocolate', 'coral', 'cornflowerblue', 'cornsilk', 'crimson', 'cyan', 'darkblue', 'darkcyan', 'darkgoldenrod', 'darkgray', 'darkgreen', 'darkkhaki', 'darkmagenta', 'darkolivegreen', 'darkorange', 'darkorchid', 'darkred', 'darksalmon', 'darkseagreen', 'darkslateblue', 'darkslategray', 'darkturquoise', 'darkviolet', 'deeppink', 'deepskyblue', 'dimgray', 'dodgerblue', 'firebrick', 'floralwhite', 'forestgreen', 'fuchsia', 'gainsboro', 'ghostwhite', 'gold', 'goldenrod', 'gray', 'green', 'greenyellow', 'honeydew', 'hotpink', 'indianred', 'indigo', 'ivory', 'khaki', 'lavender', 'lavenderblush', 'lawngreen', 'lemonchiffon', 'lightblue', 'lightcoral', 'lightcyan', 'lightgoldenrodyellow', 'lightgreen', 'lightgray', 'lightpink', 'lightsalmon', 'lightseagreen', 'lightskyblue', 'lightslategray', 'lightsteelblue', 'lightyellow', 'lime', 'limegreen', 'linen', 'magenta', 'maroon', 'mediumaquamarine', 'mediumblue', 'mediumorchid', 'mediumpurple', 'mediumseagreen', 'mediumslateblue', 'mediumspringgreen', 'mediumturquoise', 'mediumvioletred', 'midnightblue', 'mintcream', 'mistyrose', 'moccasin', 'navajowhite', 'navy', 'oldlace', 'olive', 'olivedrab', 'orange', 'orangered', 'orchid', 'palegoldenrod', 'palegreen', 'paleturquoise', 'palevioletred', 'papayawhip', 'peachpuff', 'peru', 'pink', 'plum', 'powderblue', 'purple', 'red', 'rosybrown', 'royalblue', 'saddlebrown', 'salmon', 'sandybrown', 'seagreen', 'seashell', 'sienna', 'silver', 'skyblue', 'slateblue', 'slategray', 'snow', 'springgreen', 'steelblue', 'tan', 'teal', 'thistle', 'tomato', 'turquoise', 'violet', 'wheat', 'white', 'whitesmoke', 'yellow', 'yellowgreen', ]
@@ -117,13 +119,16 @@ def evaluate(X, clustering, modelName):
     
 def main():
     X, idLabels = loaddata('CCGENERAL.csv')
-    X = datapreprocess(X)
+    # X = datapreprocess(X)
+    X = PreProcess.data_preprocess(X)
     print("Hopkins Statistic is: {}".format(hopkins(X)))
     
-    # with open("log.txt",'a') as f:
-    #     f.writelines("\n\n### Table Clustering Evaluation\n")
-    #     f.writelines("| ModelName | Silhouette_Coefficient | CalinskiHarabasz_index |\n")
-        
+    with open("log.txt", 'a') as f:
+        f.writelines("\n\nHopkins Statistic is: {}\n\n".format(hopkins(X)))
+        f.writelines("### Table Clustering Evaluation\n")
+        f.writelines("| ModelName | Silhouette_Coefficient | CalinskiHarabasz_index |\n")
+        f.writelines("| :---- | :---- | :---- |\n")
+
     # clustering = AffinityPropagation(random_state=4).fit(X)
     # generatePCAMap(clustering.labels_, X, "AffinityPropagation")
     # evaluate(X, clustering.labels_, "AffinityPropagation")
@@ -132,20 +137,35 @@ def main():
     # generatePCAMap(clustering.labels_, X, "DBSCAN")
     # evaluate(X, clustering.labels_, "DBSCAN")
     
-    # clustering = AgglomerativeClustering(n_clusters=4, linkage="ward").fit(X)
+    clustering = AgglomerativeClustering(n_clusters=4, linkage="ward").fit(X)
     # generatePCAMap(clustering.labels_, X, "Agglomerative")
-    # evaluate(X, clustering.labels_, "Agglomerative")
+    evaluate(X, clustering.labels_, "Agglomerative")
     
-    # bandwidth = estimate_bandwidth(X, quantile=0.2, n_samples=100)
-    # clustering = MeanShift(bandwidth=bandwidth, bin_seeding=True)
-    # clustering.fit(X)
+    bandwidth = estimate_bandwidth(X, quantile=0.2, n_samples=100)
+    clustering = MeanShift(bandwidth=bandwidth, bin_seeding=True)
+    clustering.fit(X)
     # generatePCAMap(clustering.labels_, X, "MeanShift")
-    # evaluate(X, clustering.labels_, "MeanShift")
+    evaluate(X, clustering.labels_, "MeanShift")
     
     clf = Kmeans(k=3)
     clustering = clf.predict(X)
-    generatePCAMap(clustering, X, "kmeans")
+    # generatePCAMap(clustering, X, "kmeans")
     evaluate(X, clustering, "kmeans")
+
+    # clf = AGNES(3)
+    # clustering = clf.fit(X)
+    # generatePCAMap(clustering, X, "AGNES")
+    # evaluate(X, clustering, "AGNES")
+
+    clf = MyDBSCAN(radius=1, min_samples=4)
+    clustering = clf.fit(X)
+    # generatePCAMap(clustering, X, "DBSCAN(Ours)-1-4")
+    evaluate(X, clustering, "DBSCAN(Ours)-1-4")
+
+    clf = MyDBSCAN(radius=2, min_samples=6)
+    clustering = clf.fit(X)
+    # generatePCAMap(clustering, X, "DBSCAN(Ours)-2-6")
+    evaluate(X, clustering, "DBSCAN(Ours)-2-6")
 
 if __name__ == "__main__":
     main()

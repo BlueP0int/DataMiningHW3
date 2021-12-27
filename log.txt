@@ -1,8 +1,26 @@
-
+##用所有数据均值填补NaN，无PCA
 Hopkins Statistic is: 0.9809523709191128
 ### Table Clustering Evaluation
 | ModelName | Silhouette_Coefficient | CalinskiHarabasz_index |
+| :---- | :---- | :---- |
 | DBSCAN | -0.192 |35.965 |
 | Agglomerative | 0.295 |2237.282 |
 | MeanShift | 0.390 |311.680 |
 | kmeans | 0.278 |2587.885 |
+| AGNES | 0.663 |310.826 |
+| DBSCAN(Ours)-1-4 | 0.130 |385.826 |
+| DBSCAN(Ours)-2-6 | 0.297 |554.220 |
+
+
+##用knn均值（k=5）填补，无PCA
+
+Hopkins Statistic is: 0.9679869263677414
+
+### Table Clustering Evaluation
+| ModelName | Silhouette_Coefficient | CalinskiHarabasz_index |
+| :---- | :---- | :---- |
+| Agglomerative | 0.193 |1166.009 |
+| MeanShift | 0.355 |110.255 |
+| kmeans | 0.200 |1171.665 |
+| DBSCAN(Ours)-1-4 | -0.325 |41.677 |
+| DBSCAN(Ours)-2-6 | 0.473 |936.712 |
