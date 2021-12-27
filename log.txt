@@ -24,3 +24,5 @@ Hopkins Statistic is: 0.9679869263677414
 | kmeans | 0.200 |1171.665 |
 | DBSCAN(Ours)-1-4 | -0.325 |41.677 |
 | DBSCAN(Ours)-2-6 | 0.473 |936.712 |
+| DBSCAN(Ours)-3-8 | 0.615 |880.433 |
+| DBSCAN(Ours)-3-7 | 0.619 |872.519 |

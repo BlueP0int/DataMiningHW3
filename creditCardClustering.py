@@ -123,11 +123,11 @@ def main():
     X = PreProcess.data_preprocess(X)
     print("Hopkins Statistic is: {}".format(hopkins(X)))
     
-    with open("log.txt", 'a') as f:
-        f.writelines("\n\nHopkins Statistic is: {}\n\n".format(hopkins(X)))
-        f.writelines("### Table Clustering Evaluation\n")
-        f.writelines("| ModelName | Silhouette_Coefficient | CalinskiHarabasz_index |\n")
-        f.writelines("| :---- | :---- | :---- |\n")
+    # with open("log.txt", 'a') as f:
+    #     f.writelines("\n\nHopkins Statistic is: {}\n\n".format(hopkins(X)))
+    #     f.writelines("### Table Clustering Evaluation\n")
+    #     f.writelines("| ModelName | Silhouette_Coefficient | CalinskiHarabasz_index |\n")
+    #     f.writelines("| :---- | :---- | :---- |\n")
 
     # clustering = AffinityPropagation(random_state=4).fit(X)
     # generatePCAMap(clustering.labels_, X, "AffinityPropagation")
@@ -137,35 +137,39 @@ def main():
     # generatePCAMap(clustering.labels_, X, "DBSCAN")
     # evaluate(X, clustering.labels_, "DBSCAN")
     
-    clustering = AgglomerativeClustering(n_clusters=4, linkage="ward").fit(X)
+    # clustering = AgglomerativeClustering(n_clusters=4, linkage="ward").fit(X)
     # generatePCAMap(clustering.labels_, X, "Agglomerative")
-    evaluate(X, clustering.labels_, "Agglomerative")
+    # evaluate(X, clustering.labels_, "Agglomerative")
     
-    bandwidth = estimate_bandwidth(X, quantile=0.2, n_samples=100)
-    clustering = MeanShift(bandwidth=bandwidth, bin_seeding=True)
-    clustering.fit(X)
+    # bandwidth = estimate_bandwidth(X, quantile=0.2, n_samples=100)
+    # clustering = MeanShift(bandwidth=bandwidth, bin_seeding=True)
+    # clustering.fit(X)
     # generatePCAMap(clustering.labels_, X, "MeanShift")
-    evaluate(X, clustering.labels_, "MeanShift")
+    # evaluate(X, clustering.labels_, "MeanShift")
     
-    clf = Kmeans(k=3)
-    clustering = clf.predict(X)
+    # clf = Kmeans(k=3)
+    # clustering = clf.predict(X)
     # generatePCAMap(clustering, X, "kmeans")
-    evaluate(X, clustering, "kmeans")
+    # evaluate(X, clustering, "kmeans")
 
     # clf = AGNES(3)
     # clustering = clf.fit(X)
     # generatePCAMap(clustering, X, "AGNES")
     # evaluate(X, clustering, "AGNES")
 
-    clf = MyDBSCAN(radius=1, min_samples=4)
-    clustering = clf.fit(X)
+    # clf = MyDBSCAN(radius=1, min_samples=4)
+    # clustering = clf.fit(X)
     # generatePCAMap(clustering, X, "DBSCAN(Ours)-1-4")
-    evaluate(X, clustering, "DBSCAN(Ours)-1-4")
+    # evaluate(X, clustering, "DBSCAN(Ours)-1-4")
 
-    clf = MyDBSCAN(radius=2, min_samples=6)
-    clustering = clf.fit(X)
+    # clf = MyDBSCAN(radius=2, min_samples=6)
+    # clustering = clf.fit(X)
     # generatePCAMap(clustering, X, "DBSCAN(Ours)-2-6")
-    evaluate(X, clustering, "DBSCAN(Ours)-2-6")
+    # evaluate(X, clustering, "DBSCAN(Ours)-2-6")
+
+    clf = MyDBSCAN(radius=3, min_samples=7)
+    clustering = clf.fit(X)
+    evaluate(X, clustering, "DBSCAN(Ours)-3-7")
 
 if __name__ == "__main__":
     main()
